@@ -1,8 +1,3 @@
-package camp;
-
-import camp.model.Score;
-import camp.model.Student;
-import camp.model.Subject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +11,7 @@ import java.util.Scanner;
  * 프로젝트 구조를 변경하거나 기능을 추가해도 괜찮습니다!
  * 구현에 도움을 주기위한 Base 프로젝트입니다. 자유롭게 이용해주세요!
  */
-public class CampManagementApplication {
+public class ManagementMain {
     // 데이터 저장소
     private static List<Student> studentStore;
     private static List<Subject> subjectStore;
@@ -48,56 +43,21 @@ public class CampManagementApplication {
 
     // 초기 데이터 생성
     private static void setInitData() {
-        studentStore = new ArrayList<>();
+        studentStore = new ArrayList<>(); // 학생 배열 초기화
+        // 과목 배열 초기화 , Enum을 활용하여 리펙토링
         subjectStore = List.of(
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "Java",
-                        SUBJECT_TYPE_MANDATORY
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "객체지향",
-                        SUBJECT_TYPE_MANDATORY
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "Spring",
-                        SUBJECT_TYPE_MANDATORY
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "JPA",
-                        SUBJECT_TYPE_MANDATORY
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "MySQL",
-                        SUBJECT_TYPE_MANDATORY
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "디자인 패턴",
-                        SUBJECT_TYPE_CHOICE
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "Spring Security",
-                        SUBJECT_TYPE_CHOICE
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "Redis",
-                        SUBJECT_TYPE_CHOICE
-                ),
-                new Subject(
-                        sequence(INDEX_TYPE_SUBJECT),
-                        "MongoDB",
-                        SUBJECT_TYPE_CHOICE
-                )
+               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.JAVA),
+               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.OBJECT_ORIENTED),
+               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.SPRING),
+               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.JPA),
+               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.MYSQL),
+               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.DESIGN_PATTERN),
+               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.SPRING_SECURITY),
+               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.MONGODB)
         );
-        scoreStore = new ArrayList<>();
+        scoreStore = new ArrayList<>(); // 점수 배열 초기화
     }
+
 
     // index 자동 증가
     private static String sequence(String type) {
@@ -118,6 +78,7 @@ public class CampManagementApplication {
     }
 
     private static void displayMainView() throws InterruptedException {
+        System.out.println(subjectStore);
         boolean flag = true;
         while (flag) {
             System.out.println("\n==================================");
