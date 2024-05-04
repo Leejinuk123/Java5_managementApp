@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class Subject {
     private String subjectId;
     private SubjectList subjectList;
@@ -8,6 +12,8 @@ public class Subject {
         this.subjectList = subjectList;
 
     }
+
+
 
     // Getter
     public String getSubjectId() {

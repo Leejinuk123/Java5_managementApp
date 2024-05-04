@@ -145,13 +145,31 @@ public class ManagementMain {
     }
 
     private static void displayScoreView() {
+
+        /* 수강생 ID 입력받기 >  등록 or 수정  or 조회 or 메인
+         등록: 과목이름 / 회차 / 점수 / 등급 입력 하면 한 번에 처리(저장)
+         수정: 과목이름 / 회차 / 점수 / 등급 입력 하면 한 번에 처리(저장)
+         조회: 과목 선택 > 회차 선택 > 과목-회차-등급 출력
+         */
+
         boolean flag = true;
         while (flag) {
             System.out.println("==================================");
             System.out.println("점수 관리 실행 중...");
-            System.out.println("1. 수강생의 과목별 시험 회차 및 점수 등록");
-            System.out.println("2. 수강생의 과목별 회차 점수 수정");
-            System.out.println("3. 수강생의 특정 과목 회차별 등급 조회");
+            System.out.println("\n관리할 수강생의 번호를 입력하시오...");
+            int inStudentId = sc.nextInt(); //입력값을 받은 inStudentID로 가지고 있기
+            sc.nextLine();
+
+            //받은 수강생Id 로 Score 저장소에 등록
+            //받은 수강생Id 로 등록된 것 가져와서 수정,
+            //받은 수강생Id 로 등록 후 조회할 예정
+            //getStudentId에 등록된 id 라면 다음으로 넘어가고, 아니면 없다는 메세지 출력후 다시 입력하게 유도
+            //등록된 id가 하나도 없으므로 위 내용은 불가능함
+
+            System.out.println("==================================");
+            System.out.println("1. 수강생" + inStudentId + "의 과목별 시험 회차 및 점수 등록");
+            System.out.println("2. 수강생" + inStudentId + "의 과목별 회차 점수 수정");
+            System.out.println("3. 수강생" + inStudentId + "의 특정 과목 회차별 등급 조회");
             System.out.println("4. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
@@ -176,7 +194,12 @@ public class ManagementMain {
 
     // 수강생의 과목별 시험 회차 및 점수 등록
     private static void createScore() {
+        System.out.println("등록할 과목을 입력해 주세요: ");
+
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
+//        등록: 과목이름 / 회차 / 점수 / 등급 입력 하면 한 번에 처리(저장)
+
+        // 기능 구현
         System.out.println("시험 점수를 등록합니다...");
         // 기능 구현
         System.out.println("\n점수 등록 성공!");
@@ -185,6 +208,9 @@ public class ManagementMain {
     // 수강생의 과목별 회차 점수 수정
     private static void updateRoundScoreBySubject() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        //수정: 과목이름 / 회차 / 점수 / 등급 입력 하면 한 번에 처리(저장)
+
+
         // 기능 구현 (수정할 과목 및 회차, 점수)
         System.out.println("시험 점수를 수정합니다...");
         // 기능 구현
@@ -194,8 +220,12 @@ public class ManagementMain {
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
+
+
         // 기능 구현 (조회할 특정 과목)
+
         System.out.println("회차별 등급을 조회합니다...");
+        //조회: 과목 선택 > 회차 선택 > 과목-회차-등급 출력
         // 기능 구현
         System.out.println("\n등급 조회 성공!");
     }
