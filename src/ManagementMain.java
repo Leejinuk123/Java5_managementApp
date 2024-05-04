@@ -1,8 +1,7 @@
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+    // dev로 가자
 /**
  * Notification
  * Java, 객체지향이 아직 익숙하지 않은 분들은 위한 소스코드 틀입니다.
@@ -18,8 +17,8 @@ public class ManagementMain {
     private static List<Score> scoreStore;
 
     // 과목 타입
-    private static String SUBJECT_TYPE_MANDATORY = "MANDATORY";
-    private static String SUBJECT_TYPE_CHOICE = "CHOICE";
+    private static final String SUBJECT_TYPE_MANDATORY = "MANDATORY";
+    private static final String SUBJECT_TYPE_CHOICE = "CHOICE";
 
     // index 관리 필드
     private static int studentIndex;
@@ -30,10 +29,17 @@ public class ManagementMain {
     private static final String INDEX_TYPE_SCORE = "SC";
 
     // 스캐너
-    private static Scanner sc = new Scanner(System.in);
+    private static final Scanner sc = new Scanner(System.in);
 
+
+
+
+    // 실행부분
     public static void main(String[] args) {
         setInitData();
+
+
+
         try {
             displayMainView();
         } catch (Exception e) {
@@ -41,19 +47,24 @@ public class ManagementMain {
         }
     }
 
+
+
+
+
     // 초기 데이터 생성
     private static void setInitData() {
         studentStore = new ArrayList<>(); // 학생 배열 초기화
         // 과목 배열 초기화 , Enum을 활용하여 리펙토링
         subjectStore = List.of(
-               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.JAVA),
-               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.OBJECT_ORIENTED),
-               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.SPRING),
-               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.JPA),
-               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.MYSQL),
-               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.DESIGN_PATTERN),
-               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.SPRING_SECURITY),
-               new  Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.MONGODB)
+                new Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.JAVA),
+                new Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.OBJECT_ORIENTED),
+                new Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.SPRING),
+                new Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.JPA),
+                new Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.MYSQL),
+                new Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.DESIGN_PATTERN),
+                new Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.SPRING_SECURITY),
+                new Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.REDIS),
+                new Subject(sequence(INDEX_TYPE_SUBJECT), SubjectList.MONGODB)
         );
         scoreStore = new ArrayList<>(); // 점수 배열 초기화
     }
@@ -78,7 +89,6 @@ public class ManagementMain {
     }
 
     private static void displayMainView() throws InterruptedException {
-        System.out.println(subjectStore);
         boolean flag = true;
         while (flag) {
             System.out.println("\n==================================");
@@ -88,6 +98,7 @@ public class ManagementMain {
             System.out.println("3. 프로그램 종료");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
+            sc.nextLine();
 
             switch (input) {
                 case 1 -> displayStudentView(); // 수강생 관리
@@ -112,6 +123,7 @@ public class ManagementMain {
             System.out.println("3. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
+            sc.nextLine();
 
             switch (input) {
                 case 1 -> createStudent(); // 수강생 등록
@@ -127,15 +139,37 @@ public class ManagementMain {
 
     // 수강생 등록
     private static void createStudent() {
-        System.out.println("\n수강생을 등록합니다...");
-        System.out.print("수강생 이름 입력: ");
-        String studentName = sc.next();
-        // 기능 구현 (필수 과목, 선택 과목)
+        StudentMethod studentMethod = new StudentMethod();
 
-        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
-        // 기능 구현
+        // 기능구현 - by 정근
+            // inItMethod 로 INDEX_TYPE_STUDENT 만 넘겨주면 Student 인스턴스를 리턴받음
+          Student student = studentMethod.inItMethod(sequence(INDEX_TYPE_STUDENT));
+
+        // 기능 구현 (필수 과목, 선택 과목)
+        //필수과목 입력받고 저장하기
+        studentMethod.mandatoryMethod(student ,subjectStore);
+
+        //선택과목 입력받고 저장하기
+        studentMethod.choiceMethod(student, subjectStore);
+
+
+        // 리스트 확인
+        System.out.println(student.getStudentId() + "   " + student.getStudentName()); // 수강생 인스턴스 생성확인
+        ArrayList studentSubjectList = student.getStudentSubjectList();
+        for (Object o : studentSubjectList) {
+            System.out.println(o);
+        }
+
+
         System.out.println("수강생 등록 성공!\n");
+
+
     }
+
+
+
+
+
 
     // 수강생 목록 조회
     private static void inquireStudent() {
