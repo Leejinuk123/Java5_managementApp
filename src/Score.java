@@ -16,7 +16,7 @@ public class Score {
       this.scoreId = seq;
    }
 
-   char mandatorySubjectGrade;
+   char mandatorySbjectGrade;
    char choiceSubjectGrade;
 
     //필수과목 점수별 등급
