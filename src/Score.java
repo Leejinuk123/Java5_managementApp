@@ -16,39 +16,39 @@ public class Score {
       this.scoreId = seq;
    }
 
-   char mandatorySbjectGrade;
+   char mandatorySubjectGrade;
    char choiceSubjectGrade;
 
     //필수과목 점수별 등급
-   public char mandatorySbjectGrade(int score) {
-      if (95 <= score &&  score<= 100) {
-          mandatorySbjectGrade = 'A';
-      } else if (90 <= score &&  score < 95){
-          mandatorySbjectGrade = 'B';
-      } else if (80 <= score &&  score < 90){
-          mandatorySbjectGrade = 'C';
-      } else if (70 <= score &&  score < 80){
-          mandatorySbjectGrade = 'D';
-      } else if (60 <= score &&  score < 70){
-          mandatorySbjectGrade = 'F';
+   public char mandatorySubjectGrade(int score) {
+      if (95 <= score ) {
+          mandatorySubjectGrade = 'A';
+      } else if (90 <= score ){
+          mandatorySubjectGrade = 'B';
+      } else if (80 <= score ){
+          mandatorySubjectGrade = 'C';
+      } else if (70 <= score ){
+          mandatorySubjectGrade = 'D';
+      } else if (60 <= score ){
+          mandatorySubjectGrade = 'F';
       } else {
-          mandatorySbjectGrade = 'N';
+          mandatorySubjectGrade = 'N';
       }
-      return mandatorySbjectGrade;
+      return mandatorySubjectGrade;
    }
 
    //선택과목 점수별 등급
    public char chioceSubjectGrade(int score){
       char chioceSubjectGrade;
-      if (90 <= score &&  score<= 100) {
+      if (90 <= score ) {
          chioceSubjectGrade = 'A';
-      } else if (80 <= score &&  score < 90){
+      } else if (80 <= score ){
          chioceSubjectGrade = 'B';
-      } else if (70 <= score &&  score < 80){
+      } else if (70 <= score ){
          chioceSubjectGrade = 'C';
-      } else if (60 <= score &&  score < 70){
+      } else if (60 <= score ){
          chioceSubjectGrade = 'D';
-      } else if (50 <= score &&  score < 60){
+      } else if (50 <= score ){
          chioceSubjectGrade = 'F';
       } else {
          chioceSubjectGrade = 'N';
