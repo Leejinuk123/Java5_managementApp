@@ -191,7 +191,7 @@ public class ManagementMain {
     }
 
     private static String getStudentId() {
-        System.out.print("\n관리할 수강생의 번호를 입력하시오...");
+        System.out.print("\n관리할 수강생의 ID를 입력하시오...");
         return sc.next();
     }
 
@@ -248,13 +248,13 @@ public class ManagementMain {
                 return;
             }
         }
-        System.out.println("입력한 학생 번호는 잘못 입력됐거나, 존재하지 않습니다.");
+        System.out.println("입력한 학생 ID는 잘못 입력됐거나, 존재하지 않습니다.");
     }
 
     // 수강생의 과목별 회차 점수 수정
     private static void updateRoundScoreBySubject() {
         String selectSubject;
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        String studentId = getStudentId(); // 관리할 수강생 고유 번호(ID)
         if ("exit".equals(studentId)) return;
         System.out.println("==================================");
         for (Student student : studentStore) {
@@ -309,7 +309,7 @@ public class ManagementMain {
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
         String selectSubject;
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        String studentId = getStudentId(); // 관리할 수강생 고유 번호(ID)
         if ("exit".equals(studentId)) return;
 
         System.out.println("==================================");
@@ -342,24 +342,24 @@ public class ManagementMain {
 
                 //해당 과목 의 점수 목록 받아와서 원하는 회차의 점수 추출
                 int[] scores = scoreMap.get(selectSubject);
-                int score = scores[round];
+                int score = scores[round-1];
 
                 //추출한 점수에 맞는 등급 조회하기
                 String s = selectSubject; //사용자가 선택한 과목
-                // String[] belongMan = SubjectList.mandatorytList; //SubjectList 클래스에서 가져온 필수과목 리스트
-                //String[] belongCh = SubjectList.choiceList; //SubjectList 클래스에서 가져온 선택과목 리스트
+                String[] belongMan = SubjectList.mandatorytList; //SubjectList 클래스에서 가져온 필수과목 리스트
+                String[] belongCh = SubjectList.choiceList; //SubjectList 클래스에서 가져온 선택과목 리스트
                 for (String string : SubjectList.mandatorytList) {
                     System.out.println(string);
                 }
 
                 //조회를 원하는 과목이 필수과목 소속인지, 선택과목 소속인지 확인하여 등급 리턴 & 출력
-                for (int i = 0; i < SubjectList.mandatorytList.length; i++) {
+                for (int i = 0; i < belongMan.length; i++) {
                     if (SubjectList.mandatorytList[i].equals(s)) {
                         s = "mandatory";
                         break;
                     }
                 }
-                    for (int j = 0; j < SubjectList.choiceList.length; j++) {
+                    for (int j = 0; j < belongCh.length; j++) {
                         if (SubjectList.choiceList[j].equals(s)) {
                             s = "choice";
                             break;
