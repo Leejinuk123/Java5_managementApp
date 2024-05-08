@@ -1,4 +1,4 @@
-
+import java.util.List;
 
 public enum SubjectList {
     // 상수로 과목 생성
@@ -8,6 +8,7 @@ public enum SubjectList {
      SPRING(SubjectType.MANDATORY,"Spring"),
      JPA(SubjectType.MANDATORY,"JPA"),
      MYSQL(SubjectType.MANDATORY,"MYSQL"),
+
      DESIGN_PATTERN(SubjectType.CHOICE,"디자인 패턴"),
      SPRING_SECURITY(SubjectType.CHOICE,"Spring Security"),
      REDIS(SubjectType.CHOICE,"Redis"),
@@ -19,7 +20,6 @@ public enum SubjectList {
     private final SubjectType subjectType;
 
 
-    // Subject 타입의 subjectType 와 String 타입의 subjectName을 가진다
     SubjectList(SubjectType subjectType , String subjectName) {
        this.subjectName = subjectName;
        this.subjectType = subjectType;
@@ -35,5 +35,7 @@ public enum SubjectList {
         return subjectType;
     }
 
+    static String[] mandatorytList= {"Java", "객체지향", "Spring", "JPA","MYSQL"};
+    static String[] choiceList = {"디자인패턴", "Spring Security", "Redis", "MongoDB"};
 
 }

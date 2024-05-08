@@ -16,44 +16,46 @@ public class Score {
       this.scoreId = seq;
    }
 
-   char mandatorySbjectGrade;
+   char mandatorySubjectGrade;
    char choiceSubjectGrade;
 
     //필수과목 점수별 등급
-   public char mandatorySubjectGrade(int score) {
-      if ( score >= 95) {
-          mandatorySubjectGrade = 'A';
-      } else if ( score >= 90 ){
-          mandatorySubjectGrade = 'B';
-      } else if ( score >= 80){
-          mandatorySubjectGrade = 'C';
-      } else if ( score >= 70 ){
-          mandatorySubjectGrade = 'D';
-      } else if ( score >= 60){
-          mandatorySubjectGrade = 'F';
-      } else {
-          mandatorySubjectGrade = 'N';
-      }
-      return mandatorySubjectGrade;
-   }
+   public static char grade(int score, String type) {
+      char grade = 'Z';
+       switch(type){
+           case "mandatory":
+               if (score >= 95) {
+                   grade = 'A';
+               } else if (score >= 90) {
+                   grade = 'B';
+               } else if (score >= 80) {
+                   grade = 'C';
+               } else if (score >= 70) {
+                   grade = 'D';
+               } else if (score >= 60) {
+                   grade = 'F';
+               } else {
+                   grade = 'N';
+               }
+                break;
 
-   //선택과목 점수별 등급
-   public char chioceSubjectGrade(int score){
-      char chioceSubjectGrade;
-      if ( score >= 90 ) {
-         chioceSubjectGrade = 'A';
-      } else if ( score >= 80 ){
-         chioceSubjectGrade = 'B';
-      } else if ( score >= 70 ){
-         chioceSubjectGrade = 'C';
-      } else if ( score >= 60 ){
-         chioceSubjectGrade = 'D';
-      } else if ( score >= 50){
-         chioceSubjectGrade = 'F';
-      } else {
-         chioceSubjectGrade = 'N';
+           case "choice":
+               if (score >= 90) {
+                   grade = 'A';
+               } else if (score >= 80) {
+                   grade = 'B';
+               } else if (score >= 70) {
+                   grade = 'C';
+               } else if (score >= 60) {
+                   grade = 'D';
+               } else if (score >= 50) {
+                   grade = 'F';
+               } else {
+                   grade = 'N';
+               }
+               break;
       }
-      return chioceSubjectGrade;
+      return grade;
    }
 
    public String getStudentId(){
