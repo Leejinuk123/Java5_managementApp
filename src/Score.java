@@ -16,9 +16,9 @@ public class Score {
         this.scoreId = seq;
     }
 
-    //필수과목 점수별 등급
+    //필수과목 & 선택과목 점수별 등급 산출 메서드
     public static char grade(int score, String type) {
-        char grade = 'Z';
+        char grade = ' ';
         switch (type) {
             case "mandatory":
                 if (score >= 95) {

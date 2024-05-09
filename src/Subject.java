@@ -12,6 +12,7 @@ public class Subject {
     public Subject(String seq, SubjectList subjectList) {
         this.subjectId = seq;
         this.subjectList = subjectList;
+    }
 
     public Subject(String subjectName, boolean isMandatory) {
     }
