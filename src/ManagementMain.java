@@ -367,11 +367,11 @@ public class ManagementMain {
     }
 
     // 수강생의 특정 과목 회차별 등급 조회
-    private static void inquireRoundGradeBySubject() {
+    // 수강생의 특정 과목 회차별 점수 조회
+    private static void inquireRoundScoreBySubject() {
         String selectSubject;
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호(ID)
+        String studentId = getStudentId(); // 관리할 수강생 고유 번호
         if ("exit".equals(studentId)) return;
-
         System.out.println("==================================");
         for (Student student : studentStore) {
             if (student.getStudentId().equals(studentId)) {
@@ -396,41 +396,84 @@ public class ManagementMain {
                     if (flag) System.out.println("과목 이름이 틀렸거나, 점수가 미등록된 과목은 조회할 수 없습니다. 다시 입력해주세요.");
                 } while (flag);
 
-                System.out.print("조회를 원하는" + selectSubject + "의 시험회차를 입력해주세요: ");
-                int round = sc.nextInt();
-                sc.nextLine(); //개행문자 비워주기.
-
-                //해당 과목 의 점수 목록 받아와서 원하는 회차의 점수 추출
-                int[] scores = scoreMap.get(selectSubject);
-                int score = scores[round - 1];
-
-                //추출한 점수에 맞는 등급 조회하기
-                String s = selectSubject; //사용자가 선택한 과목
-                String[] belongMan = SubjectList.mandatorytList; //SubjectList 클래스에서 가져온 필수과목 리스트
-                String[] belongCh = SubjectList.choiceList; //SubjectList 클래스에서 가져온 선택과목 리스트
-                for (String string : SubjectList.mandatorytList) {
-                    System.out.println(string);
-                }
-
-                //조회를 원하는 과목이 필수과목 소속인지, 선택과목 소속인지 확인하여 등급 리턴 & 출력
-                for (int i = 0; i < belongMan.length; i++) {
-                    if (SubjectList.mandatorytList[i].equals(s)) {
-                        s = "mandatory";
-                        break;
-                    }
-                }
-                for (int j = 0; j < belongCh.length; j++) {
-                    if (SubjectList.choiceList[j].equals(s)) {
-                        s = "choice";
-                        break;
-                    }
-                }
-                System.out.println(s);
-
-                char finalGrade = Score.grade(score, s);
-                System.out.println(studentId + "님의 " + selectSubject + " " + round + "회차 시험은" + score + "점(" + finalGrade + ") 입니다");
+                System.out.println(selectSubject + "과목의 점수를 조회합니다. ");
+                System.out.println(Arrays.toString(scoreMap.get(selectSubject)));
+                return;
             }
         }
+        System.out.println("입력한 학생 번호는 잘못 입력됐거나, 존재하지 않습니다.");
+    }
+
+    // 수강생의 특정 과목 회차별 등급 조회 마무리 ,  code by yoonjae
+    private static void inquiryAvgGrade() {
+        String selectSubject;
+        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        if ("exit".equals(studentId)) return;
+        System.out.println("==================================");
+        for (Student student : studentStore) {
+            if (student.getStudentId().equals(studentId)) {
+                Map<String, int[]> scoreMap = student.getStudentScoreMap();
+                Set<String> subject = scoreMap.keySet();
+                System.out.println(student.getStudentId() + " " + student.getStudentName() + "의 등급을 조회합니다.");
+                for (int i = 0; i < student.getStudentSubjectList().size(); i++) {
+                    System.out.println(i + 1 + ". " + student.getStudentSubjectList().get(i));
+                }
+
+                boolean flag = true; //반복 체크용 flag.
+                sc.nextLine(); //개행문자 비워주기.
+                do {
+                    System.out.print("등급을 조회할 과목의 이름을 입력하세요(돌아가려면 \"exit\"을 입력해주세요): ");
+                    selectSubject = sc.nextLine();
+                    if ("exit".equals(selectSubject)) return;
+                    for (String key : subject) {
+                        if (key.equals(selectSubject)) {
+                            flag = false; //일치하는 과목이 있으면 do-while문 탈출.
+                        }
+                    }
+                    if (flag) System.out.println("과목 이름이 틀렸거나, 점수가 미등록된 과목은 조회할 수 없습니다. 다시 입력해주세요.");
+                } while (flag);
+
+                System.out.println(selectSubject + "과목의 등급을 조회합니다. ");
+                int[] scores = scoreMap.get(selectSubject);
+                int totalScore = 0;
+                for (int i = 0; i < scores.length; i++) {
+                    totalScore += scores[i];
+                }
+                int averageScore = totalScore / scores.length;
+                String grade = getGrade(averageScore); // 평균 점수에 따른 등급 계산 메서드 호출
+                System.out.println("평균 등급: " + grade);
+
+                return;
+            }
+        }
+        System.out.println("입력한 학생 번호는 잘못 입력됐거나, 존재하지 않습니다.");
+    }
+
+
+    private static String getGrade(int score) { // 필수과목 산정기준
+        if (score >= 95) {
+            return "A";
+        } else if (score >= 90) {
+            return "B";
+        } else if (score >= 80) {
+            return "C";
+        } else if (score >= 70) {
+            return "D";
+        } else if (score >= 60) {
+            return "F";
+        }
+        return "N";
+    }
+
+
+    //
+    private static boolean isMandatorySubject(String subjectName) {
+        for (SubjectList subject : SubjectList.values()) {
+            if (subject.getSubjectName().equals(subjectName) && subject.getSubjectType() == SubjectType.MANDATORY) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // 필수 과목 평균 등급 조회하는 메서드
