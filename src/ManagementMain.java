@@ -1,5 +1,6 @@
 import java.util.*;
 // dev로 가자
+
 /**
  * Notification
  * Java, 객체지향이 아직 익숙하지 않은 분들은 위한 소스코드 틀입니다.
@@ -342,7 +343,7 @@ public class ManagementMain {
 
                 //해당 과목 의 점수 목록 받아와서 원하는 회차의 점수 추출
                 int[] scores = scoreMap.get(selectSubject);
-                int score = scores[round-1];
+                int score = scores[round - 1];
 
                 //추출한 점수에 맞는 등급 조회하기
                 String s = selectSubject; //사용자가 선택한 과목
@@ -359,20 +360,17 @@ public class ManagementMain {
                         break;
                     }
                 }
-                    for (int j = 0; j < belongCh.length; j++) {
-                        if (SubjectList.choiceList[j].equals(s)) {
-                            s = "choice";
-                            break;
-                        }
+                for (int j = 0; j < belongCh.length; j++) {
+                    if (SubjectList.choiceList[j].equals(s)) {
+                        s = "choice";
+                        break;
                     }
-                    System.out.println(s);
-
-                    char finalGrade = Score.grade(score, s);
-                    System.out.println(studentId + "님의 " + selectSubject + " " + round + "회차 시험은" + score + "점(" + finalGrade + ") 입니다");
                 }
-            }
+                System.out.println(s);
 
+                char finalGrade = Score.grade(score, s);
+                System.out.println(studentId + "님의 " + selectSubject + " " + round + "회차 시험은" + score + "점(" + finalGrade + ") 입니다");
+            }
         }
     }
-
 }
