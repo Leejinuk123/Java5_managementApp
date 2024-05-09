@@ -15,6 +15,8 @@ public class ManagementMain {
     private static List<Subject> subjectStore;
     private static List<Score> scoreStore;
 
+    private static Student student;
+
 
     // index 관리 필드
     private static int studentIndex;
@@ -31,11 +33,6 @@ public class ManagementMain {
     // 실행부분
     public static void main(String[] args) {
         setInitData(); //데이터 생성.
-        for (String string : SubjectList.mandatorytList) {
-            System.out.println(string);
-        }
-
-
         while (true) {
             try {
                 displayMainView();
@@ -115,7 +112,8 @@ public class ManagementMain {
             System.out.println("수강생 관리 실행 중...");
             System.out.println("1. 수강생 등록");
             System.out.println("2. 수강생 목록 조회");
-            System.out.println("3. 메인 화면 이동");
+            System.out.println("3. 수강생 정보 삭제");
+            System.out.println("4. 메인 항목으로 이동");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
             sc.nextLine();
@@ -123,7 +121,8 @@ public class ManagementMain {
             switch (input) {
                 case 1 -> createStudent(); // 수강생 등록
                 case 2 -> inquireStudent(); // 수강생 목록 조회
-                case 3 -> flag = false; // 메인 화면 이동
+                case 3 -> removeStudent(); // 수강생 정보 삭제
+                case 4 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                     flag = false;
@@ -132,19 +131,24 @@ public class ManagementMain {
         }
     }
 
+    private static void removeStudent() {  // by 윤재
+        StudentUtils studentUtils = new StudentUtils();
+        studentUtils.removeStudent(studentStore); // 고유 ID를 불러와서 삭제하기
+    }
+
     // 수강생 등록
     private static void createStudent() {
-        StudentMethod studentMethod = new StudentMethod();
+
         // 기능구현 - by 정근
         // inItMethod 로 INDEX_TYPE_STUDENT 만 넘겨주면 Student 인스턴스를 리턴받음
-        Student student = studentMethod.inItMethod(sequence(INDEX_TYPE_STUDENT));
+        Student student = StudentUtils.inItMethod(sequence(INDEX_TYPE_STUDENT));
         studentStore.add(student);
         // 기능 구현 (필수 과목, 선택 과목)
         //필수과목 입력받고 저장하기
-        studentMethod.mandatoryMethod(student, subjectStore);
+        StudentUtils.mandatoryMethod(student, subjectStore);
 
         //선택과목 입력받고 저장하기
-        studentMethod.choiceMethod(student, subjectStore);
+        StudentUtils.choiceMethod(student, subjectStore);
 
 
         // 리스트 확인
@@ -161,9 +165,11 @@ public class ManagementMain {
 
     // 수강생 목록 조회
     private static void inquireStudent() {
-        StudentMethod studentMethod = new StudentMethod();
-        studentMethod.lookUp(studentStore);
+        StudentUtils studentUtils = new StudentUtils();
+        studentUtils.lookUp(studentStore);
         // made by 정근
+        // 수강생 목록 불러오기
+
     }
 
     private static void displayScoreView() {
@@ -173,16 +179,20 @@ public class ManagementMain {
             System.out.println("점수 관리 실행 중...");
             System.out.println("1. 수강생의 과목별 시험 회차 및 점수 등록");
             System.out.println("2. 수강생의 과목별 회차 점수 수정");
-            System.out.println("3. 수강생의 특정 과목 회차별 등급 조회");
-            System.out.println("4. 메인 화면 이동");
+            System.out.println("3. 수강생의 특정 과목 회차별 등급을 조회");
+            System.out.println("4. 수강생의 특정 과목별 평균등급 조회");
+            System.out.println("5. 수강생 필수과목 평균등급 조회");
+            System.out.println("6. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
             int input = sc.nextInt();
 
             switch (input) {
                 case 1 -> createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
                 case 2 -> updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
-                case 3 -> inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
-                case 4 -> flag = false; // 메인 화면 이동
+                case 3 -> inquiryEpisodeGrade();
+                case 4 -> inquiryAvgGrade(); // 수강생의 특정 과목 회차별 등급 조회
+                case 5 -> calculateAverageMandatorySubjects(); // 평균등급 조회
+                case 6 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                     flag = false;
@@ -191,8 +201,9 @@ public class ManagementMain {
         }
     }
 
+    // 멤버 변수로 등급을 가지고 있기 , 점수가 입력되는순간 등급을 반환되는 메서드 가지고 있기 enum
     private static String getStudentId() {
-        System.out.print("\n관리할 수강생의 ID를 입력하시오...");
+        System.out.print("\n관리할 수강생의 번호를 입력하시오...");
         return sc.next();
     }
 
@@ -249,13 +260,13 @@ public class ManagementMain {
                 return;
             }
         }
-        System.out.println("입력한 학생 ID는 잘못 입력됐거나, 존재하지 않습니다.");
+        System.out.println("입력한 학생 번호는 잘못 입력됐거나, 존재하지 않습니다.");
     }
 
     // 수강생의 과목별 회차 점수 수정
     private static void updateRoundScoreBySubject() {
         String selectSubject;
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호(ID)
+        String studentId = getStudentId(); // 관리할 수강생 고유 번호
         if ("exit".equals(studentId)) return;
         System.out.println("==================================");
         for (Student student : studentStore) {
@@ -302,6 +313,47 @@ public class ManagementMain {
                     System.out.println("올바른 회차가 아닙니다.");
                     return;
                 }
+            }
+        }
+        System.out.println("입력한 학생 번호는 잘못 입력됐거나, 존재하지 않습니다.");
+    }
+
+    private static void inquiryEpisodeGrade() {
+        String selectSubject;
+        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        if ("exit".equals(studentId)) return;
+        System.out.println("==================================");
+        for (Student student : studentStore) {
+            if (student.getStudentId().equals(studentId)) {
+                Map<String, int[]> scoreMap = student.getStudentScoreMap();
+                Set<String> subject = scoreMap.keySet();
+                System.out.println(student.getStudentId() + " " + student.getStudentName() + "의 등급을 조회합니다.");
+                for (int i = 0; i < student.getStudentSubjectList().size(); i++) {
+                    System.out.println(i + 1 + ". " + student.getStudentSubjectList().get(i));
+                }
+
+                boolean flag = true; //반복 체크용 flag.
+                sc.nextLine(); //개행문자 비워주기.
+                do {
+                    System.out.print("등급을 조회할 과목의 이름을 입력하세요(돌아가려면 \"exit\"을 입력해주세요): ");
+                    selectSubject = sc.nextLine();
+                    if ("exit".equals(selectSubject)) return;
+                    for (String key : subject) {
+                        if (key.equals(selectSubject)) {
+                            flag = false; //일치하는 과목이 있으면 do-while문 탈출.
+                        }
+                    }
+                    if (flag) System.out.println("과목 이름이 틀렸거나, 점수가 미등록된 과목은 조회할 수 없습니다. 다시 입력해주세요.");
+                } while (flag);
+
+                System.out.println(selectSubject + "과목의 등급을 조회합니다. ");
+                int[] scores = scoreMap.get(selectSubject);
+                for (int i = 0; i < scores.length; i++) {
+                    String grade = getGrade(scores[i]); // 점수에 따른 등급 계산 메서드 호출
+                    System.out.println((i + 1) + "회차 등급: " + grade);
+                }
+
+                return;
             }
         }
         System.out.println("입력한 학생 번호는 잘못 입력됐거나, 존재하지 않습니다.");
@@ -370,6 +422,47 @@ public class ManagementMain {
 
                 char finalGrade = Score.grade(score, s);
                 System.out.println(studentId + "님의 " + selectSubject + " " + round + "회차 시험은" + score + "점(" + finalGrade + ") 입니다");
+            }
+        }
+    }
+
+    // 필수 과목 평균 등급 조회하는 메서드
+    private static void calculateAverageMandatorySubjects() {
+        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        if ("exit".equals(studentId)) return;
+
+        System.out.println("==================================");
+        for (Student student : studentStore) {
+            if (student.getStudentId().equals(studentId)) {
+                Map<String, int[]> scoreMap = student.getStudentScoreMap();
+                ArrayList<String> subjectList = student.getStudentSubjectList();
+
+                System.out.println(student.getStudentId() + " " + student.getStudentName() + "의 필수 과목 평균 등급을 계산합니다.");
+
+                int totalMandatoryScore = 0; // 모든 필수 과목의 총 점수
+                int totalMandatorySubjects = 0; // 필수 과목 수
+
+                // 모든 과목에 대해 점수를 확인하여 필수 과목이면 평균 계산에 포함
+                for (String subject : subjectList) {
+                    if (isMandatorySubject(subject)) {
+                        int[] scores = scoreMap.get(subject);
+                        if (scores != null && scores.length > 0) { // 과목 점수 배열이 null이 아니고 길이가 0보다 큰 경우
+                            int subjectTotalScore = 0; // 각 과목의 총 점수
+                            for (int score : scores) {
+                                subjectTotalScore += score;
+                            }
+                            // 각 과목의 평균 점수를 계산하여 총 점수에 더함
+                            totalMandatoryScore += subjectTotalScore / scores.length;
+                            totalMandatorySubjects++; // 필수 과목 수 증가
+                        } else {
+                            System.out.println(subject + " 과목의 점수가 없습니다. 이 과목은 평균 계산에서 제외됩니다.");
+                        }
+                    }
+                }
+                // 필수 과목 점수가 없는 경우를 처리하여 평균 등급 계산 (예외처리(?))
+                int averageScore = totalMandatorySubjects > 0 ? totalMandatoryScore / totalMandatorySubjects : 0;
+                String grade = getGrade(averageScore); // 등급 반환
+                System.out.println("필수 과목 평균 등급: " + grade);
             }
         }
     }
